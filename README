@@ -1,0 +1,48 @@
+Pungaru Stelian Andrei - 313CA
+
+General
+
+    In node_t *addr_node I keep an address that is previously cast to unsigned
+int to be very likely on 8 bytes
+    At list_t I implemented a doubly chained and circular list although I do
+not have that used this aspect
+    free_malloc *v is a vector of addresses that are allocated each, containing
+the possible character string received at write
+    create(), add_nth_node(), remove_nth_node(), Free() are suggestive
+functions and very similar to those from the laboratory with the only
+modification: addr must not be allocated in memory
+    v[i].f or mystruct.lists[v[i].n]->size_in_bytes returns the number of bytes
+from allocated memory and mystruct.lists[i]->size the number of bytes in the
+free blocks
+    mystruct.bytes = 8 is always the minimum value of a list
+    max_size is the number of allocated elements of v and when it is
+reached we double the allocated memory
+    Unfortunately, I did not make the function of removing the list without
+elements because of the simplicity
+
+Malloc
+
+    I search in the lists and if I find the size I can remove the first node
+and keep it in v. Otherwise, it means fragmentation and I increase by 1 the
+indexes of the lists with a larger number of bytes. If there is already a list
+with the right size I only look for the correct position and insert otherwise
+relocate the vector of lists, I create a list, I move the larger lists one to
+the right
+
+Free
+
+    If the address is not fragmented, then I put the node in the list and
+remove it from v. Otherwise I check if it already exists to put a new node,
+if not reallocate with specified rules
+
+Read
+
+    If I can't find the address in v or the area I'm reading from is not
+continuous on given size, write seg fault, dump memory and close the program.
+
+Write
+
+    The same exceptional cases as in read. If I write over an area already
+written then replace the first characters. Otherwise, allocate memory as
+size and write in this and move to the next element from v to
+end nr_bytes to write
